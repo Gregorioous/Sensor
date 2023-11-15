@@ -25,6 +25,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -49,7 +50,6 @@ class DetailFragment : Fragment() {
 
 
     private var looperJob: Job? = null
-    private var isDrawn = false
 
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -92,6 +92,12 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        looperJob = viewLifecycleOwner.lifecycleScope.launch {
+            while (true) {
+                updateMultiChart()
+                delay(16)
+            }
+        }
         name.text = getString(R.string.labelName, viewModel.sensor.name)
         vendor.text = getString(R.string.labelVendor, viewModel.sensor.vendor)
         version.text = getString(R.string.labelVersion, viewModel.sensor.version.toString())
@@ -120,6 +126,21 @@ class DetailFragment : Fragment() {
             activity?.window?.statusBarColor = color
             icon.setImageDrawable(ContextCompat.getDrawable(requireContext(), it.icon))
         }
+    }
+
+    private fun updateMultiChart() {
+        xText.text = getString(
+            viewModel.itemSensor.unit,
+            viewModel.xValues.lastOrNull() ?: 0.0
+        )
+        yText.text = getString(
+            viewModel.itemSensor.unit,
+            viewModel.yValues.lastOrNull() ?: 0.0
+        )
+        zText.text = getString(
+            viewModel.itemSensor.unit,
+            viewModel.zValues.lastOrNull() ?: 0.0
+        )
     }
 
     override fun onStart() {
