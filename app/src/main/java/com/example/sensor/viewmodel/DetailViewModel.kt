@@ -6,19 +6,13 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.example.repository.entity.SessionEntity
-import com.example.repository.repositiry.SessionRepository
 import com.example.sensor.utils.ARG_SENSOR_TYPE
 import com.example.sensor.utils.Globals
-import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.concurrent.ConcurrentLinkedQueue
-import javax.inject.Inject
 
-@HiltViewModel
-class DetailViewModel @Inject constructor(
+class DetailViewModel(
     savedStateHandle: SavedStateHandle,
     val sensorManager: SensorManager,
-    private val sessionRepository: SessionRepository,
 ) : ViewModel() {
 
     val sensorType = savedStateHandle.get<Int>(ARG_SENSOR_TYPE)!!
@@ -68,16 +62,5 @@ class DetailViewModel @Inject constructor(
                 /* do nothing */
             }
         }
-    }
-
-
-    suspend fun insertSensor(): Long {
-        return sessionRepository.insert(
-            SessionEntity(
-                id = 0,
-                sensorType = sensorType,
-                timestamp = System.currentTimeMillis()
-            )
-        )
     }
 }

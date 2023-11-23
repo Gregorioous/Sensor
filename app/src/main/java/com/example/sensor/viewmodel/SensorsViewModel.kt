@@ -7,11 +7,9 @@ import android.hardware.SensorManager
 import androidx.lifecycle.ViewModel
 import com.example.sensor.model.UISensor
 import com.example.sensor.utils.Globals
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
-@HiltViewModel
-class SensorsViewModel @Inject constructor(
+
+class SensorsViewModel(
     private val sensorManager: SensorManager
 ) : ViewModel() {
 

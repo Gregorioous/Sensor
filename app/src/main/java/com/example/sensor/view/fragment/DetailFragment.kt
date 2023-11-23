@@ -1,15 +1,11 @@
 package com.example.sensor.view.fragment
 
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.hardware.SensorManager
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -19,16 +15,12 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.sensor.R
 import com.example.sensor.databinding.FragmentDetailBinding
-import com.example.sensor.service.RecordService
 import com.example.sensor.viewmodel.DetailViewModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
+
 class DetailFragment : Fragment() {
     private val viewModel: DetailViewModel by viewModels()
 
@@ -50,12 +42,6 @@ class DetailFragment : Fragment() {
 
 
     private var looperJob: Job? = null
-
-    private val permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            if (it) startRecordingService()
-        }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -167,49 +153,5 @@ class DetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-
-    private fun startRecordingService() {
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            val id = viewModel.insertSensor()
-            val intent = Intent(context, RecordService::class.java).apply {
-                putExtra(RecordService.ARG_ENABLED, true)
-                putExtra(RecordService.ARG_SENSOR_TYPE, viewModel.sensorType)
-                putExtra(RecordService.ARG_RECORDING_ID, id)
-            }
-            ContextCompat.startForegroundService(requireContext(), intent)
-
-        }
-    }
-
-
-    private fun requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= 33) {
-            when {
-                ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    android.Manifest.permission.POST_NOTIFICATIONS
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    /* do nothing */
-                }
-
-                shouldShowRequestPermissionRationale(android.Manifest.permission.POST_NOTIFICATIONS) -> {
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(R.string.all_notification)
-                        .setMessage(R.string.notification_permission_rationale)
-                        .setPositiveButton(android.R.string.ok) { dialogInterface, _ ->
-                            permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-                            dialogInterface?.dismiss()
-                        }
-                        .setNegativeButton(android.R.string.cancel) { dialogInterface, _ ->
-                            dialogInterface?.dismiss()
-                        }
-                        .show()
-                }
-
-                else -> permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-            }
-        }
     }
 }
