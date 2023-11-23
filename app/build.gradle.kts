@@ -2,7 +2,6 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
 
@@ -49,17 +48,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.6.0")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
-
-    implementation("androidx.hilt:hilt-common:1.1.0")
-    implementation("androidx.hilt:hilt-navigation-fragment:1.1.0")
-    implementation("com.google.dagger:hilt-android:2.46.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.46.1")
-    kapt("androidx.hilt:hilt-compiler:1.1.0")
-
-    implementation("androidx.room:room-paging:2.5.2")
-
-
-    implementation(project(":repository"))
+    implementation("androidx.activity:activity-compose:1.3.1")
+    implementation("androidx.compose.ui:ui:1.0.4")
+    implementation("androidx.compose.ui:ui-tooling:1.0.4")
 }

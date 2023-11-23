@@ -18,9 +18,8 @@ import com.example.sensor.utils.Globals
 import com.example.sensor.view.AdapterSensor
 import com.example.sensor.view.MainActivity
 import com.example.sensor.viewmodel.SensorsViewModel
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+
 class SensorsFragment : Fragment() {
     private val viewModel: SensorsViewModel by viewModels()
 
@@ -53,7 +52,6 @@ class SensorsFragment : Fragment() {
         recyclerHome.recycledViewPool.setMaxRecycledViews(-1, 0)
         recyclerHome.setItemViewCacheSize(Globals.sensors.size)
 
-        //reset status bar color from details fragment color change
         activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.primary)
 
         return binding.root
